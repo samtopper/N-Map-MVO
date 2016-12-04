@@ -51,20 +51,22 @@ var model = {
     }
   ]
 };
-
+var map;
+var markers = [];
+//var gMap = google.maps;
 var octopus = {
 
   init: function(){
     // This Map constructor creates a new Map.
-    var map;
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat:17.401481, lng:78.450091},
-        zoom: 13,
+
+     map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat:17.361555, lng:78.474666},
+        zoom: 11,
         mapTypeControl: false
     });
     locationsView.init();
     locationsListView.init();
-  }
+  },
 
   // This function takes in a color, and then creates a new marker icon of that color.
   makeMarkerIcon: function(markerColor) {
@@ -76,7 +78,7 @@ var octopus = {
       new google.maps.Point(10, 34),
       new google.maps.Size(21,34));
     return markerImage;
-  }
+  },
 
   // This function takes the input value in the find nearby area text input
   // locates it, and then zooms into that area. This is so that the user can
@@ -87,24 +89,26 @@ var octopus = {
   // Get the address or place that the user entered.
   var address = document.getElementById('zoom-to-area-text').value;
   // Make sure the address isn't blank.
-  if (address == '') {
+  if (address === '') {
     window.alert('You must enter an area, or address.');
   } else {
-    // Geocode the address/area entered to get the center. Then, center the map
-    // on it and zoom in
-    geocoder.geocode(
-      { address: address,
-        componentRestrictions: {locality: 'Hyderabad'}
-      }, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-          map.setCenter(results[0].geometry.location);
-          map.setZoom(15);
-        } else {
-          window.alert('We could not find that location - try entering a more' +
-              ' specific place.');
-        }
-      });
-  }
+      // Geocode the address/area entered to get the center. Then, center the map
+      // on it and zoom in
+      geocoder.geocode(
+        { address: address,
+          componentRestrictions: {locality: 'Hyderabad'}
+        }, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+              map.setCenter(results[0].geometry.location);
+              map.setZoom(15);
+            } else {
+              window.alert('We could not find that location - try entering a more' +
+                  ' specific place.');
+            }
+          }
+      );
+    }
+  },
 
   // This function populates the infowindow when the marker is clicked.
   populateInfoWindow: function(marker, infowindow) {
@@ -118,7 +122,7 @@ var octopus = {
           infowindow.marker = null;
         });
       }
-  }
+  },
 
   // looping through the markers array and displaying them.
   showListings: function() {
@@ -129,14 +133,14 @@ var octopus = {
       bounds.extend(markers[i].position);
     }
     map.fitBounds(bounds);
-  }
+  },
 
   // loop through the listings and hiding them.
   hideListings: function() {
     for (var i = 0, len = markers.length; i < len; i++) {
       markers[i].setMap(null);
     }
-  }
+  },
 
 };
 
@@ -144,7 +148,7 @@ var locationsView = {
 
   init: function(){
     // Create a new array for all the listing markers.
-    var markers = [];
+
     var largeInfowindow = new google.maps.InfoWindow();
     var defaultIcon = octopus.makeMarkerIcon('1D97C4');
     // Highlighting the marker when the user mouses over.
@@ -165,10 +169,7 @@ var locationsView = {
       });
       // Push the marker to our array of markers.
       markers.push(marker);
-      // onclick event to open an infowindow at each marker.
-      marker.addListener('click', function() {
-        octopus.populateInfoWindow(this, largeInfowindow);
-      });
+
       // Two event listeners to change the colors back and forth.
       marker.addListener('mouseover', function() {
         this.setIcon(highlightedIcon);
@@ -176,17 +177,27 @@ var locationsView = {
       marker.addListener('mouseout', function() {
         this.setIcon(defaultIcon);
       });
-    }
+     // onclick event to open an infowindow at each marker.
+      marker.addListener('click', function() {
+        octopus.populateInfoWindow(this, largeInfowindow);
+      });
 
-    document.getElementById('show-listings').addEventListener('click', octopus.showListings);
-    document.getElementById('hide-listings').addEventListener('click', octopus.hideListings);
+     }
+
+
+    document.getElementById('show-locations').addEventListener('click', octopus.showListings);
+    document.getElementById('hide-locations').addEventListener('click', octopus.hideListings);
     document.getElementById('zoom-to-area').addEventListener('click', function() {
       octopus.zoomToArea();
-  }
+    });
 
+  }
 };
 
 var locationsListView = {
+  init: function(){
+    console.log("This method is under construction.");
+  }
 
 };
 

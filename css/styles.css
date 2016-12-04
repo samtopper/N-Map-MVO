@@ -25,8 +25,8 @@ margin: 0 0 10px 0;
 text-align: center;
 }
 
-#hide-listings,
-#show-listings {
+#hide-locations,
+#show-locations {
     width: 48%;
 }
 
@@ -37,7 +37,7 @@ text-align: center;
 #map {
 bottom:0px;
 height: 100%;
-left: 362px;
+left: 345px;
 position: absolute;
 right: 0px;
 }
