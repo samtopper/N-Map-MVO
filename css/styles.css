@@ -62,5 +62,15 @@ width: 215px;
     width: 24%;
 }
 
+select {
+    height: 200px;
+    width: 150px;
+}
+
+select > option {
+    margin: 4px;
+    background-color: pink;
+}
+
 
 

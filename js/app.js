@@ -41,15 +41,24 @@ var ViewModel = {
 
         var fsquare_id = 'K3QM5R5HR0FLEUVDY2EU5PWVXL5TAGAC2EAKLVJ5UVZHSSDA';
         var fsquare_secret = 'BU5ATIO30ETMIMAUGWVCXLBZGIMDQJAZ1ASLKT5NVURXS01W';
+        model.forEach(function(item){
+            $.ajax({
+                url: 'https://api.foursquare.com/v2/venues/explore',
+                dataType: 'jsonp',
+                data: 'limit=1&ll=' + item.location.lat + ',' + item.location.lng + '&query=' + item.title + '&client_id=' + fsquare_id + '&client_secret=' + fsquare_secret + '&v=20140806&m=foursquare',
+            }).done(function(response){
+                item.rating = data.response.groups[0].items[0].venue.rating;
+                        console.log(data.response.photo);
+                        if (!item.rating) {
+                            item.rating = 'No rating in foursquare';
+                        }
+                        marker.content = '<br><div class="labels">' + '<div class="title">' + item.title + '</div><div class="rating">Foursquare rating: ' + item.rating + '</div><p>' + item.description + '</p>' + '<a href=' + item.URL + '>' + item.URL + '</a>' + '</div>';
 
-        $.ajax({
-            url: 'https://api.foursquare.com/v2/venues/explore',
-            dataType: 'jsonp',
-        }).done(function(response){
 
-
-            clearTimeout(requestTimeout);
+                clearTimeout(requestTimeout);
+            });
         });
+
     },
 
 
@@ -188,12 +197,9 @@ var locationsView = {
         var SimpleListModel = function(items) {
             this.items = ko.observableArray(items);
 
-            this.itemToAdd = ko.observable("");
-            this.addItem = function() {
-                if (this.itemToAdd() != "") {
-                    this.items.push(this.itemToAdd()); // Adds the item. Writing to the "items" observableArray causes any associated UI to update.
-                    this.itemToAdd(""); // Clears the text box, because it's bound to the "itemToAdd" observable
-                }
+            this.clickedItem = ko.observable("");
+            this.itemClick = function() {
+                // implement when a place is clicked that particular location should bounce.
             }.bind(this);  // Ensure that "this" is always this view model
         };
 
