@@ -199,7 +199,9 @@ var locationsView = {
 
             this.clickedItem = ko.observable("");
             this.itemClick = function() {
+
                 // implement when a place is clicked that particular location should bounce.
+                console.log("under development.");
             }.bind(this);  // Ensure that "this" is always this view model
         };
 
