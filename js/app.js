@@ -1,83 +1,24 @@
-var model = {
+// minified the model data for simplicity.
+//var model={locations:[{title:"Charminar",location:{lat:17.361555,lng:78.474666}},{title:"SalarJung Museum",location:{lat:17.371436,lng:78.480347}},{title:"Golconda Fort",location:{lat:17.385363,lng:78.40413}},{title:"Nehru Zoological Park",location:{lat:17.348305,lng:78.442511}},{title:"Qutub Shahi Tombs",location:{lat:17.394746,lng:78.394717}},{title:"Ocean Park",location:{lat:17.389672,lng:78.328797}},{title:"Snow World",location:{lat:17.414365,lng:78.48341}},{title:"Ramoji Film City",location:{lat:17.255826,lng:78.682419}},{title:"Hi Tech City",location:{lat:17.446831,lng:78.376585}},{title:"Falaknuma Palace",location:{lat:17.330955,lng:78.467504}},{title:"MGBS",location:{lat:17.379872,lng:78.48301}},{title:"RG International Airport",location:{lat:17.240263,lng:78.429385}}]};
+var model = [
+    {title:"Charminar",location:{lat:17.361555,lng:78.474666}},
+    {title:"SalarJung Museum",location:{lat:17.371436,lng:78.480347}},
+    {title:"Golconda Fort",location:{lat:17.385363,lng:78.40413}},
+    {title:"Nehru Zoological Park",location:{lat:17.348305,lng:78.442511}},
+    {title:"Qutub Shahi Tombs",location:{lat:17.394746,lng:78.394717}},
+    {title:"Ocean Park",location:{lat:17.389672,lng:78.328797}},
+    {title:"Snow World",location:{lat:17.414365,lng:78.48341}},
+    {title:"Ramoji Film City",location:{lat:17.255826,lng:78.682419}},
+    {title:"Hi Tech City",location:{lat:17.446831,lng:78.376585}},
+    {title:"Falaknuma Palace",location:{lat:17.330955,lng:78.467504}},
+    {title:"MGBS",location:{lat:17.379872,lng:78.48301}},
+    {title:"RG International Airport",location:{lat:17.240263,lng:78.429385}}
+];
 
-    locations: [{
-        title: 'Charminar',
-        location: {
-            lat: 17.361555,
-            lng: 78.474666
-        }
-    }, {
-        title: 'SalarJung Museum',
-        location: {
-            lat: 17.371436,
-            lng: 78.480347
-        }
-    }, {
-        title: 'Golconda Fort',
-        location: {
-            lat: 17.385363,
-            lng: 78.40413
-        }
-    }, {
-        title: 'Nehru Zoological Park',
-        location: {
-            lat: 17.348305,
-            lng: 78.442511
-        }
-    }, {
-        title: 'Qutub Shahi Tombs',
-        location: {
-            lat: 17.394746,
-            lng: 78.394717
-        }
-    }, {
-        title: 'Ocean Park',
-        location: {
-            lat: 17.389672,
-            lng: 78.328797
-        }
-    }, {
-        title: 'Snow World',
-        location: {
-            lat: 17.414365,
-            lng: 78.48341
-        }
-    }, {
-        title: 'Ramoji Film City',
-        location: {
-            lat: 17.255826,
-            lng: 78.682419
-        }
-    }, {
-        title: 'Hi Tech City',
-        location: {
-            lat: 17.446831,
-            lng: 78.376585
-        }
-    }, {
-        title: 'Falaknuma Palace',
-        location: {
-            lat: 17.330955,
-            lng: 78.467504
-        }
-    }, {
-        title: 'MGBS',
-        location: {
-            lat: 17.379872,
-            lng: 78.48301
-        }
-    }, {
-        title: 'RG International Airport',
-        location: {
-            lat: 17.240263,
-            lng: 78.429385
-        }
-    }]
-};
-var map;
+var map, marker;
 var markers = [];
 //var gMap = google.maps;
-var octopus = {
+var ViewModel = {
 
     init: function() {
         // This Map constructor creates a new Map.
@@ -92,7 +33,24 @@ var octopus = {
         });
         locationsView.init();
         locationsListView.init();
+
+        var requestTimeout = setTimeout(function(){
+            // $wikiElem.text("failed to get wikipedia resources.");
+        }, 8000);
+
+        var fsquare_id = 'K3QM5R5HR0FLEUVDY2EU5PWVXL5TAGAC2EAKLVJ5UVZHSSDA';
+        var fsquare_secret = 'BU5ATIO30ETMIMAUGWVCXLBZGIMDQJAZ1ASLKT5NVURXS01W';
+
+        $.ajax({
+            url: 'https://api.foursquare.com/v2/venues/explore',
+            dataType: 'jsonp',
+        }).done(function(response){
+
+
+            clearTimeout(requestTimeout);
+        });
     },
+
 
     // This function takes in a color, and then creates a new marker icon of that color.
     makeMarkerIcon: function(markerColor) {
@@ -170,6 +128,14 @@ var octopus = {
         }
     },
 
+    toggleBounce: function() {
+        if (marker.getAnimation() !== null) {
+          marker.setAnimation(null);
+        } else {
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+    }
+
 };
 
 var locationsView = {
@@ -178,15 +144,15 @@ var locationsView = {
         // Create a new array for all the listing markers.
 
         var largeInfowindow = new google.maps.InfoWindow();
-        var defaultIcon = octopus.makeMarkerIcon('1D97C4');
+        var defaultIcon = ViewModel.makeMarkerIcon('1D97C4');
         // Highlighting the marker when the user mouses over.
-        var highlightedIcon = octopus.makeMarkerIcon('AAE12C');
-        var marker;
+        var highlightedIcon = ViewModel.makeMarkerIcon('AAE12C');
+
         // this for loop creates an array of markers on initialization.
-        for (var i = 0, len = model.locations.length; i < len; i++) {
+        for (var i = 0, len = model.length; i < len; i++) {
             // Get the position from the location array.
-            var position = model.locations[i].location;
-            var title = model.locations[i].title;
+            var position = model[i].location;
+            var title = model[i].title;
             // Create a marker per location, and put into markers array.
             marker = new google.maps.Marker({
                 position: position,
@@ -207,18 +173,31 @@ var locationsView = {
             });
             // onclick event to open an infowindow at each marker.
             marker.addListener('click', function() {
-                octopus.populateInfoWindow(this, largeInfowindow);
+                ViewModel.populateInfoWindow(this, largeInfowindow);
+                marker.toggleBounce();
             });
 
-            document.getElementById('show-locations').addEventListener('click', octopus.showListings);
-            document.getElementById('hide-locations').addEventListener('click', octopus.hideListings);
+            document.getElementById('show-locations').addEventListener('click', ViewModel.showListings);
+            document.getElementById('hide-locations').addEventListener('click', ViewModel.hideListings);
             document.getElementById('zoom-to-area').addEventListener('click', function() {
-                octopus.zoomToArea();
+                ViewModel.zoomToArea();
             });
         }
 
+        var SimpleListModel = function(items) {
+            this.items = ko.observableArray(items);
 
+            this.itemToAdd = ko.observable("");
+            this.addItem = function() {
+                if (this.itemToAdd() != "") {
+                    this.items.push(this.itemToAdd()); // Adds the item. Writing to the "items" observableArray causes any associated UI to update.
+                    this.itemToAdd(""); // Clears the text box, because it's bound to the "itemToAdd" observable
+                }
+            }.bind(this);  // Ensure that "this" is always this view model
+        };
 
+        //ko.applyBindings(new SimpleListModel(["Alpha", "Beta", "Gamma"]));
+        ko.applyBindings(new SimpleListModel(model) );
     }
 };
 
@@ -230,4 +209,4 @@ var locationsListView = {
 };
 
 // //start
-// octopus.init();
+// ViewModel.init();
