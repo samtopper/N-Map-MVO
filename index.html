@@ -18,11 +18,13 @@
 
         <hr>
         <form data-bind="submit: addItem">
+
+          <p>Places List:</p>
+          <select multiple="multiple" width="50" data-bind="options: items"> </select>
+
           New item:
           <input data-bind='value: itemToAdd, valueUpdate: "afterkeydown"' />
           <button type="submit" data-bind="enable: itemToAdd().length > 0">Add</button>
-          <p>Places List:</p>
-          <select multiple="multiple" width="50" data-bind="options: items"> </select>
         </form>
 
         <hr>

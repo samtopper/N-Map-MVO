@@ -36,6 +36,7 @@ var ViewModel = {
 
         var requestTimeout = setTimeout(function(){
             // $wikiElem.text("failed to get wikipedia resources.");
+            console.log("failed to get resources");
         }, 8000);
 
         var fsquare_id = 'K3QM5R5HR0FLEUVDY2EU5PWVXL5TAGAC2EAKLVJ5UVZHSSDA';
